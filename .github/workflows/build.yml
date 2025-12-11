@@ -34,6 +34,7 @@ jobs:
       id: login
       with:
         user: ${{ secrets.NUGET_USER }}
+        environment: prod
   
     # Push the package
     - name: NuGet push
