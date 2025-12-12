@@ -8,10 +8,14 @@
     <PackageId>SimpleScriptingService</PackageId>
     <Title>SimpleScriptingService</Title>
     <Authors>mkozek@kozek.dev</Authors>
-    <Copyright>CC-BY 4.0</Copyright>
+    <Copyright>MIT</Copyright>
     <PackageTags>C#;Scripting;Roslyn </PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/mkozek/SimpleScriptingService</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/mkozek/SimpleScriptingService</RepositoryUrl>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +23,13 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
