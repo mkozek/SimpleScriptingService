@@ -1,5 +1,8 @@
 ﻿namespace ScriptService;
 
+/// <summary>
+/// Provides the result of a script execution, indicating success or failure along with any return value or error message.
+/// </summary>
 public sealed class ScriptResult
 {
     public bool IsSuccess { get; }

@@ -12,28 +12,48 @@ public sealed class ScriptEngine
     // Keeps state between script executions
     private ScriptState<object>? _state;
 
-    public static ScriptEngine ScriptEngineWithGlobals(ScriptGlobals globals) =>
-        new(globals);
 
-    public static ScriptEngine ScriptEngineWithState(SharedState state, ILogger? logger = null) =>
-        new(new ScriptGlobals(state, logger));
+    /// <summary>
+    /// Initializes a new instance of the ScriptEngine class with the specified global variables and optional default
+    /// imports.
+    /// </summary>
+    /// <remarks>If addDefaultImports is set to true, the engine automatically imports namespaces such as
+    /// System, System.Linq, System.Text, and System.Collections.Generic, making their types available in scripts
+    /// without requiring explicit import statements.</remarks>
+    /// <param name="globals">An object containing global variables and context to be made available to scripts executed by the engine. 
+    /// If null default ScriptGlobals implementation is provided</param>
+    /// <param name="addDefaultImports">true to add a set of commonly used default namespace imports to the script environment; otherwise, false.</param>
+    public static ScriptEngine ScriptEngineWithGlobals(ScriptGlobals globals, bool addDefaultImports = true) =>
+        new(globals, addDefaultImports);
 
-    private ScriptEngine(ScriptGlobals globals)
+    /// <summary>
+    /// Creates a new instance of the script engine configured with the specified shared state, optional default
+    /// imports, and an optional logger.
+    /// </summary>
+    /// <param name="state">The shared state to be used by the script engine. Cannot be null.</param>
+    /// <param name="addDefaultImports">true to add the default set of imports to the script engine; otherwise, false. The default is true.</param>
+    /// <param name="logger">An optional logger used to record script execution events. If null, no logging is performed.</param>
+    /// <returns>A new ScriptEngine instance initialized with the provided shared state and configuration.</returns>
+    public static ScriptEngine ScriptEngineWithState(SharedState state, bool addDefaultImports = true, ILogger? logger = null) =>
+        new(new ScriptGlobals(state, logger), addDefaultImports);
+
+
+    private ScriptEngine(ScriptGlobals? globals, bool addDefaultImports = true)
     {
-        _globals = globals;
+        _globals = globals ?? new ScriptGlobals(null);
 
         _options = ScriptOptions.Default
             .AddReferences(
                 typeof(object).Assembly,
-                typeof(ScriptGlobals).Assembly,
-                typeof(System.Text.Json.JsonDocument).Assembly
-            )
-            .AddImports(
-                "System",
-                "System.Linq",
-                "System.Text",
-                "System.Collections.Generic"
+                typeof(ScriptGlobals).Assembly
             );
+        if (addDefaultImports)
+            _options = _options.AddImports(
+                                "System",
+                                "System.Linq",
+                                "System.Text",
+                                "System.Collections.Generic"
+                                );
     }
 
     public void ClearState()
@@ -41,11 +61,11 @@ public sealed class ScriptEngine
         _state = null;
     }
 
-    internal void AddReference(Type type)
+    public void AddReference(Type type)
     {
         _options = _options.AddReferences(type.Assembly);
     }
-    internal void AddImports(params string[] @namespaces)
+    public void AddImports(params string[] @namespaces)
     {
         _options = _options.AddImports(@namespaces);
     }

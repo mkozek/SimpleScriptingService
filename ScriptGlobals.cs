@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 namespace ScriptService;
 
-public sealed class ScriptGlobals
+public class ScriptGlobals
 {
     private ILogger? _logger;
     public SharedState State { get; }
@@ -9,6 +9,10 @@ public sealed class ScriptGlobals
     public ScriptGlobals(SharedState state, ILogger? logger)
     {
         State = state;
+    }
+    public ScriptGlobals(ILogger? logger)
+    {
+        State = new SharedState();
     }
 
     public void Log(string message)
